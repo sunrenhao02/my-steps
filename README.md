@@ -2,6 +2,16 @@
 
 记录你走过的每一个城市，导出为图片分享。
 
+## 截图
+
+| 省级视图 | 市级视图 | 配色方案 |
+|---------|---------|---------|
+| ![省](省.png) | ![市](市.png) | ![配色](配色.png) |
+
+## 在线访问
+
+[https://sunrenhao02.github.io/my-steps](https://sunrenhao02.github.io/my-steps)
+
 ## 使用
 
 直接浏览器打开 `index.html` 即可。

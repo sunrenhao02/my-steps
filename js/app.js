@@ -224,7 +224,7 @@ function loadMapData() {
     const c = getCentroidLngLat(f);
     return {
       type: 'Feature',
-      properties: { name: f.properties.name, gb: f.properties.gb },
+      properties: { name: f.properties.name, gb: f.properties.gb, shortName: f.properties.shortName || shortName(f.properties.name) },
       geometry: { type: 'Point', coordinates: [c.lng, c.lat] },
     };
   });
@@ -254,8 +254,8 @@ function loadMapData() {
   map.addLayer({
     id: 'city-labels',
     type: 'symbol',
-    source: 'cities',
-    filter: ['in', 'gb', ''],  // 初始无标签，动态更新
+    source: 'city-centroids',
+    filter: ['in', 'gb', ''],
     layout: {
       'text-field': ['get', 'shortName'],
       'text-font': ['Noto Sans CJK JP Bold'],
