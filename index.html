@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>足迹地图</title>
+  <meta name="description" content="记录你走过的每一个城市">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <div id="app">
+    <button id="sidebarToggle" title="切换侧边栏">☰</button>
+
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">足迹地图</div>
+        <div class="subtitle">Footprint Map</div>
+      </div>
+
+      <div class="sidebar-content">
+        <div class="search-section">
+          <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-input"
+                   placeholder="搜索城市"
+                   autocomplete="off">
+            <button id="addCityBtn" class="search-btn">添加</button>
+          </div>
+          <div id="searchDropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="view-toggle">
+          <button class="view-toggle-btn" data-view="province">省级</button>
+          <button class="view-toggle-btn active" data-view="city">市级</button>
+        </div>
+
+        <div class="palette-section">
+          <div class="palette-header">地图配色</div>
+          <div class="palette-swatches">
+            <div class="scheme-swatch active" data-scheme="a">
+              <span class="swatch-vis" style="background:#b8e3ff"></span>
+              <span class="swatch-uni" style="background:#eef0f4"></span>
+              <span class="swatch-label">冰川</span>
+            </div>
+            <div class="scheme-swatch" data-scheme="b">
+              <span class="swatch-vis" style="background:#fad6b3"></span>
+              <span class="swatch-uni" style="background:#f2efe9"></span>
+              <span class="swatch-label">日落</span>
+            </div>
+            <div class="scheme-swatch" data-scheme="c">
+              <span class="swatch-vis" style="background:#b5dcc0"></span>
+              <span class="swatch-uni" style="background:#eff0ec"></span>
+              <span class="swatch-label">森林</span>
+            </div>
+            <div class="scheme-swatch" data-scheme="custom">
+              <span class="swatch-custom-icon">+</span>
+              <span class="swatch-label">自定</span>
+            </div>
+          </div>
+          <div id="customColors" class="custom-colors" style="display:none">
+            <div class="custom-field">
+              <label>到访</label>
+              <input type="color" id="customVis" value="#b8e3ff">
+            </div>
+            <div class="custom-field">
+              <label>未到访</label>
+              <input type="color" id="customUnvis" value="#eef0f4">
+            </div>
+            <button id="applyCustom" class="custom-apply">应用</button>
+          </div>
+        </div>
+
+        <div class="city-list-section">
+          <div class="city-list-header">
+            <h3>足迹记录</h3>
+            <span class="city-count">共 <span id="cityCount">0</span> 城</span>
+          </div>
+          <div id="cityList" class="city-list">
+            <div class="empty-state">还没有添加任何城市</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button id="exportBtn" class="export-btn">导出图片</button>
+        <div class="footer-actions">
+          <button id="resetBtn" class="reset-btn">清空足迹</button>
+        </div>
+        <div class="stats-bar">
+          <span class="stat">城市 <strong id="cityStatCount">0</strong> / <span id="cityStatTotal">0</span></span>
+          <span class="stat">省份 <strong id="provinceStatCount">0</strong> / <span id="provinceStatTotal">0</span></span>
+        </div>
+        <div class="progress-bar">
+          <div id="cityProgressFill" class="fill" style="width:0%"></div>
+        </div>
+      </div>
+    </aside>
+
+    <main id="map-area">
+      <div id="map-container"></div>
+    </main>
+  </div>
+
+  <script src="data/geo-data.js"></script>
+  <script src="data/city-geo.js"></script>
+  <script src="data/province-geo.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
