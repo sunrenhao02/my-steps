@@ -549,9 +549,9 @@ html, body {
   #sidebarToggle.hint-active::after {
     content: '展开侧边栏';
     position: absolute;
-    left: calc(100% + 6px);
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    top: calc(100% + 10px);
+    transform: translateX(-50%);
     white-space: nowrap;
     background: var(--text-primary);
     color: #fff;
@@ -570,11 +570,11 @@ html, body {
   #sidebarToggle.hint-active::before {
     content: '';
     position: absolute;
-    left: calc(100% + 0px);
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    top: calc(100% + 3px);
+    transform: translateX(-50%);
     border: 5px solid transparent;
-    border-right-color: var(--text-primary);
+    border-bottom-color: var(--text-primary);
     pointer-events: none;
     animation: hint-fade-in 0.5s ease forwards;
   }
