@@ -897,6 +897,29 @@ function setupKeyboard() {
   });
 }
 
+// ─── 移动端引导（首次访问提示展开侧边栏）───────────────
+function setupMobileOnboarding() {
+  if (!window.matchMedia('(orientation: portrait)').matches) return;
+
+  // 默认收起侧边栏
+  $('#sidebar').classList.add('collapsed');
+
+  // 已引导过则跳过
+  if (localStorage.getItem('fp_hint_dismissed')) return;
+
+  const toggle = $('#sidebarToggle');
+  toggle.classList.add('hint-active');
+
+  const dismissHint = () => {
+    toggle.classList.remove('hint-active');
+    localStorage.setItem('fp_hint_dismissed', 'true');
+    toggle.removeEventListener('click', dismissHint);
+  };
+
+  // 首次点击☰后永久消除引导
+  toggle.addEventListener('click', dismissHint, { once: true });
+}
+
 // ─── 初始化 ────────────────────────────────────────────────
 function init() {
   loadState();
@@ -919,6 +942,7 @@ function init() {
   setupViewToggle();
   setupColorPalette();
   setupKeyboard();
+  setupMobileOnboarding();
   $('#exportBtn').addEventListener('click', exportImage);
   $('#resetBtn').addEventListener('click', () => {
     state.visitedCities.clear();
