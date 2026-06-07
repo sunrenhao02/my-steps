@@ -383,16 +383,10 @@ html, body {
   transition: width 0.5s ease;
 }
 
-/* — 侧边栏切换 — */
-#sidebarToggle {
-  position: fixed; top: 12px; left: 12px; z-index: 100;
-  width: 34px; height: 34px; border-radius: var(--radius-sm);
-  background: var(--bg-white); border: 1px solid var(--border-light);
-  color: var(--text-secondary); font-size: 16px; cursor: pointer;
-  display: none; align-items: center; justify-content: center;
-  box-shadow: var(--shadow-sm);
-}
-#sidebarToggle:hover { border-color: var(--accent-deep); color: var(--text-primary); }
+/* — 侧边栏切换 & 移动端顶栏 — */
+/* 桌面端：隐藏按钮和移动端顶栏 */
+#sidebarToggle { display: none; }
+#mobile-header { display: none; }
 
 /* — 地图区域 — */
 #map-area {
@@ -474,11 +468,69 @@ html, body {
 }
 
 @media (max-width: 768px) {
+  /* 移动端顶栏 - 固定在顶部 */
+  #mobile-header {
+    display: flex;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 48px;
+    align-items: center;
+    gap: 4px;
+    padding: 0 12px;
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border-light);
+    z-index: 20;
+    box-shadow: var(--shadow-sm);
+  }
+
+  #sidebarToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-primary);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  #sidebarToggle:active { background: var(--bg-hover); }
+
+  .mobile-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 1.5px;
+  }
+
+  /* 侧边栏在顶栏下方滑出 */
   #sidebar {
-    position: absolute; left: 0; top: 0; z-index: 15;
-    box-shadow: var(--shadow-lg);
+    position: absolute;
+    left: 0; top: 48px;
+    width: calc(100vw - 48px);
+    max-width: 360px;
+    height: calc(100vh - 48px);
+    z-index: 15;
+    box-shadow: 4px 0 24px rgba(44,39,35,0.08);
   }
   #sidebar.collapsed { transform: translateX(-100%); }
-  #sidebarToggle { display: flex; }
+
+  /* 侧边栏展开时隐藏移动端标题（避免重复） */
+  #sidebar:not(.collapsed) ~ #mobile-header .mobile-title {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  /* 侧边栏里的标题和移动端顶栏重复，隐藏掉 */
+  .sidebar-header { display: none; }
+  .sidebar-content { padding-top: 16px; }
+
+  /* 调整地图缩放控件不被顶栏挡住 */
+  .mapboxgl-ctrl-top-right { top: 56px !important; }
+
   :root { --sidebar-width: 300px; }
 }

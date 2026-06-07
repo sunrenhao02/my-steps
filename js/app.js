@@ -605,13 +605,18 @@ function toggleCity(cityName, provinceName) {
 function addCityByName(cityName) {
   const n = cityName.trim();
   if (!n) return false;
-  const p = getProvinceOfCity(n);
+
+  // 解析不完整名称为完整官方名称（如 "武汉" → "武汉市"，"大兴安岭" → "大兴安岭地区"）
+  const results = searchCities(n);
+  const targetName = results.length > 0 ? results[0].name : n;
+
+  const p = getProvinceOfCity(targetName);
   if (!p) { showToast(`未找到 "${n}"`, 'error'); return false; }
-  if (state.visitedCities.has(n)) { showToast(`${n} 已在足迹中`); return true; }
-  state.visitedCities.add(n);
+  if (state.visitedCities.has(targetName)) { showToast(`${targetName} 已在足迹中`); return true; }
+  state.visitedCities.add(targetName);
   state.visitedProvinces.add(p);
   saveState(); syncAll(); updateUI();
-  showToast(`已添加 ${n}`);
+  showToast(`已添加 ${targetName}`);
   return true;
 }
 
