@@ -529,42 +529,15 @@ html, body {
   .sidebar-header { display: none; }
   .sidebar-content { padding-top: 16px; }
 
-  /* ── 移动端引导提示 ── */
+  /* ── 移动端引导脉冲 ── */
   @keyframes hint-pulse {
     0%   { box-shadow: 0 0 0 0 rgba(74,158,255,0.5); }
     70%  { box-shadow: 0 0 0 14px rgba(74,158,255,0); }
     100% { box-shadow: 0 0 0 0 rgba(74,158,255,0); }
   }
 
-  @keyframes hint-fade-in {
-    from { opacity: 0; transform: translateY(-50%) translateX(-8px); }
-    to   { opacity: 1; transform: translateY(-50%) translateX(0); }
-  }
-
   #sidebarToggle.hint-active {
     animation: hint-pulse 2s ease-in-out infinite;
-    position: relative;
-  }
-
-  #sidebarToggle.hint-active::after {
-    content: '展开侧边栏';
-    position: fixed;
-    top: 56px;
-    left: 12px;
-    white-space: nowrap;
-    background: var(--bg-primary);
-    color: var(--text-secondary);
-    border: 1px solid var(--border-light);
-    font-size: 12px;
-    line-height: 1;
-    padding: 7px 11px;
-    border-radius: 8px;
-    font-family: var(--font-body);
-    font-weight: 400;
-    letter-spacing: 0.3px;
-    pointer-events: none;
-    animation: hint-fade-in 0.5s ease forwards;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
 
   /* 调整地图缩放控件不被顶栏挡住 */
