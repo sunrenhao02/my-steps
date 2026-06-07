@@ -548,18 +548,19 @@ html, body {
 
   #sidebarToggle.hint-active::after {
     content: '展开侧边栏';
-    position: absolute;
-    left: 0;
-    top: calc(100% + 8px);
+    position: fixed;
+    top: 56px;
+    left: 12px;
     white-space: nowrap;
-    background: var(--accent);
-    color: var(--text-primary);
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
     font-size: 12px;
     line-height: 1;
     padding: 7px 11px;
     border-radius: 8px;
     font-family: var(--font-body);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: 0.3px;
     pointer-events: none;
     animation: hint-fade-in 0.5s ease forwards;
