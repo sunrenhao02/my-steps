@@ -627,13 +627,15 @@ function removeCity(cityName) {
   saveState(); syncAll(); updateUI();
 }
 
-// ─── 导出图片 ──────────────────────────────────────────────
+// ─── 导出图片（预览→下载）───────────────────────────────
+let _previewBlobUrl = null;
+
 function exportImage() {
   if (state.isExporting) return;
   state.isExporting = true;
   const btn = $('#exportBtn');
   const orig = btn.textContent;
-  btn.textContent = '导出中...';
+  btn.textContent = '生成预览...';
   btn.disabled = true;
   popup.remove();
 
@@ -641,34 +643,48 @@ function exportImage() {
     try {
       const canvas = map.getCanvas();
       canvas.toBlob(blob => {
-        if (!blob || blob.size < 200) {
-          showToast('导出失败', 'error');
-          btn.textContent = orig;
-          btn.disabled = false;
-          state.isExporting = false;
-          return;
-        }
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.download = `足迹地图_${new Date().toISOString().slice(0,10)}.png`;
-        link.href = url;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(url), 5000);
-        showToast('图片已导出');
         btn.textContent = orig;
         btn.disabled = false;
         state.isExporting = false;
+
+        if (!blob || blob.size < 200) {
+          showToast('生成预览失败', 'error');
+          return;
+        }
+
+        if (_previewBlobUrl) URL.revokeObjectURL(_previewBlobUrl);
+        _previewBlobUrl = URL.createObjectURL(blob);
+        showExportPreview(_previewBlobUrl);
       }, 'image/png');
     } catch (e) {
       console.error(e);
-      showToast('导出失败', 'error');
+      showToast('生成预览失败', 'error');
       btn.textContent = orig;
       btn.disabled = false;
       state.isExporting = false;
     }
   }, 200);
+}
+
+function showExportPreview(url) {
+  $('#previewImage').src = url;
+  $('#exportPreview').style.display = 'flex';
+}
+
+function closePreview() {
+  $('#exportPreview').style.display = 'none';
+}
+
+function downloadFromPreview() {
+  if (!_previewBlobUrl) return;
+  const link = document.createElement('a');
+  link.download = `足迹地图_${new Date().toISOString().slice(0,10)}.png`;
+  link.href = _previewBlobUrl;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  closePreview();
+  showToast('图片已导出');
 }
 
 // ─── UI ────────────────────────────────────────────────────
@@ -776,6 +792,7 @@ function applyColorScheme(id) {
   // 更新 CSS 变量（侧边栏）
   document.documentElement.style.setProperty('--accent', C.visited);
   document.documentElement.style.setProperty('--accent-deep', C.dot);
+  document.documentElement.style.setProperty('--accent-deep-hover', adjustBrightness(C.dot, -15));
 
   // 标记选中
   $$('.scheme-swatch').forEach(el => el.classList.toggle('active', el.dataset.scheme === id));
@@ -944,6 +961,18 @@ function init() {
   setupKeyboard();
   setupMobileOnboarding();
   $('#exportBtn').addEventListener('click', exportImage);
+  $('#previewDownload').addEventListener('click', downloadFromPreview);
+  $('#previewCancel').addEventListener('click', closePreview);
+  $('#previewClose').addEventListener('click', closePreview);
+  $('#exportPreview').addEventListener('click', e => {
+    if (e.target === $('#exportPreview')) closePreview();
+  });
+  document.addEventListener('keydown', e => {
+    if ($('#exportPreview').style.display === 'flex') {
+      if (e.key === 'Escape') { closePreview(); }
+      if (e.key === 'Enter' && e.target.tagName !== 'INPUT') { downloadFromPreview(); }
+    }
+  });
   $('#resetBtn').addEventListener('click', () => {
     state.visitedCities.clear();
     state.visitedProvinces.clear();
