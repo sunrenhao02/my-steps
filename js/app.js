@@ -130,6 +130,9 @@ function initMap() {
     loadMapData();
     setupMapInteraction();
     if (dataLoaded) syncAll();
+
+    // 修复：等下一帧强制地图重检容器尺寸，防止初始渲染空白
+    requestAnimationFrame(() => { map.resize(); });
   });
 
   map.on('resize', () => {
